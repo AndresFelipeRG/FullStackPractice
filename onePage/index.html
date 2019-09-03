@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Factors</title>
+</head>
+<body>
+    <div>
+    <div>
+        <header >
+        Prime Factors
+        <header>
+    </div>
+   
+    <div>
+        <form>
+            <div>
+                <label for="inputNumber">N</label>
+                <input type="text" class="inputExt" placeholder="Enter a positive integer" name="num" id="inputNumber" required> 
+            </div>
+            <div>
+                <button onClick="factorize()">Factor</button>
+                <button onClick="clearInputNumber()">Clear</button>
+            </div>
+        </form>
+    </div>
+    <div class= "result">
+       <p> -- Results will be displayed here --</p>
+    </div>
+
+    <div>
+        <div>
+            <header>Current time of the day</header>
+            <div>
+                <span id="hours">00</span>:
+                <span id="minutes">00</span>:
+                <span id="seconds">00</span>
+            </div>
+          
+            <div>
+                <span class ="arrowStyle" id="arrow"></div>
+            </div>
+            
+        </div>
+    </div>
+
+    </div>
+    
+    </body>
+    <script type = "text/javascript">
+
+        const inputNumber = document.getElementById("inputNumber");
+        const computationsLogs = document.querySelector(".result > p");
+        const hoursSpan = document.getElementById("hours");
+        const minutesSpan = document.getElementById("minutes");
+        const secondsSpan = document.getElementById("seconds");
+        const arrowsSpan = document.getElementById("arrow");
+        let reset = true;
+        const arrows = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖' ];
+        function clearInputNumber(){
+             inputNumber.value = '';
+             computationsLogs.innerHTML = "-- Results will be displayed here --";
+             reset = true;
+        }
+        function validate(num){
+            return /^[1-9][0-9]{0,15}$/.test(num);
+        }
+    
+        function factorize(){
+            let num =  inputNumber.value;
+            if(validate(num)){
+                if(reset){
+                    computationsLogs.innerHTML="";
+                    reset = false;
+                }
+                let result = getPrimeFactors(parseInt(num));
+                computationsLogs.innerHTML = computationsLogs.innerHTML+result;
+                inputNumber.value = '';
+            }
+            else{
+                alert("Please enter a positive number.");
+                inputNumber.value = '';
+            }
+        }
+
+        function updateTime(){
+            let currentTime = new Date();
+            let hours = currentTime.getHours();
+            let minutes = currentTime.getMinutes();
+            let seconds = currentTime.getSeconds();
+            
+            hoursSpan.innerHTML = hours;
+            minutesSpan.innerHTML = minutes;
+            secondsSpan.innerHTML = seconds;
+        }
+        function updateSpinner(){
+            let currentTime = new Date();
+            let milliseconds = currentTime.getMilliseconds()%1000;
+            let index = parseInt(""+Math.floor(milliseconds/125));
+            arrowsSpan.innerHTML = arrows[index];
+
+        }
+        function getPrimeFactors(num){
+            let primes = [];
+            let n = num;
+            let computations = [];
+            if(num === 1){
+                 return "1 = 1 <br/>";
+            }
+            while(n%2===0){
+                primes.push(2);
+                computations.push(`Dividing ${n} by 2 because ${n} is multiple of 2`);
+                n = n/2;      
+            }
+            for(let i = 3; i <= Math.sqrt(n); i = i + 2){
+                while( n % i == 0){
+                    primes.push(i);
+                    computations.push(`Dividing ${n} by ${i} because ${n} is multiple of ${i}`);
+                    n = n/i;
+                }
+            }
+            if( n > 2){
+                computations.push(`The last prime is ${n} <br/>`);
+                primes.push(n);
+            }
+            computations.push("<br/>");
+            let results = computations.join("<br/>");
+        
+            return  primes.length > 1 ? results + num + " = " + primes.join(" * ")+ "<br/><br/>": `${num} is prime <br/><br/>`;
+        }
+  
+        function main(){
+            window.setInterval(updateSpinner, 125);
+            window.setInterval(updateTime,1000);
+        }
+  
+        main();
+
+    </script>
+    <style type="text/css">
+    * {
+        overflow: auto;
+
+    }
+    body {
+        
+        font-size: 2em;
+        text-align: center;
+        background-color: #292c34;
+        font-family: Asap, sans-serif;
+        color: white;
+        padding-bottom: 30px;
+    }
+    header{
+        font-size: 2.5em;
+        text-align: center;
+    }
+    label{
+        display: inline;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .inputExt {
+        margin: 2em;
+        border:0.1em solid white;
+        text-align: center;
+        background: none;
+        background-image: none;
+        display: inline;
+        color: white;
+        width: 25%;
+        font-size: 1rem;
+        font-weight: 600;
+        
+    }
+    button{
+        border:0;
+        text-align: center;
+        outline: none;
+        border-radius: 0;
+        padding:15px 0;
+        font-size: 2rem;
+        font-weight: 600; 
+        letter-spacing: .1em;
+        color: white;
+        display: inline;
+        width: 25%;
+        background: #1ab188;
+    }
+    .arrowStyle{
+        display: block;
+        overflow-y:scroll;
+        overflow-x:hidden;
+        height: 5em;
+    }
+    </style>
+</html>
